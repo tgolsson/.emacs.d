@@ -11,6 +11,7 @@
   (corfu-echo-documentation t)   ;; Show documentation in the echo area
   (corfu-popupinfo-delay 1)
   :hook ((emacs-lisp-mode . corfu-mode)
+		 (sly-mode . corfu-mode)
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode)
 		 (python-mode . corfu-mode)

@@ -3,3 +3,5 @@
 /places
 /.cache/
 /elpa/
+/eln-cache/
+/server/

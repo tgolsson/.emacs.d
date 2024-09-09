@@ -48,24 +48,24 @@
 (use-package emacs
   :demand t
   :config
-  (use-package server
-	:demand t
-	:config
-	(defun server-ensure-safe-dir (dir) "Noop" t)
-	(unless (file-exists-p server-socket-dir)
-	  (make-directory server-socket-dir))
-	(unless (server-running-p)
-      (server-start)))
+  (when (not (string-equal (window-system) "w32"))
+    (use-package server
+	  :demand t
+	  :config
+	  (defun server-ensure-safe-dir (dir) "Noop" t)
+	  (unless (file-exists-p server-socket-dir)
+	    (make-directory server-socket-dir))
+	  (unless (server-running-p)
+        (server-start))))
 
   :init
   (global-so-long-mode 1)
   (push '(fullscreen . maximized) default-frame-alist)
-  (when window-system (set-frame-font "Cascadia Code 18"))
+  (when window-system (set-frame-font "Cascadia Code 13"))
   (set-fringe-mode 20)
   (setq-default custom-safe-themes t
                 transient-mark-mode t
 				tab-width 4)
-
   (setq completion-cycle-threshold 3
 		read-extended-command-predicate #'command-completion-default-include-p
 		tab-always-indent 'complete
@@ -142,6 +142,9 @@
 			   "visual"
 			   "web"))
   (load (expand-file-name (format "modules/%s" name) user-emacs-directory)))
+
+(when (memq window-system '(w32))
+  (expand-file-name "modules/windows" user-emacs-directory))
 
 (use-package exec-path-from-shell
   :when (memq window-system '(mac ns x))
