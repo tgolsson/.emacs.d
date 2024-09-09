@@ -113,24 +113,17 @@
   (make-variable-buffer-local 'transient-mark-mode)
   (put 'transient-mark-mode 'permanent-local t)
 
-  (to/disable tool-bar-mode)
-  (to/disable scroll-bar-mode)
-  (to/disable blink-cursor-mode)
-  (to/disable menu-bar-mode)
-  (to/disable horizontal-scroll-bar-mode)
-
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
 (use-package no-littering)
 
-
-(dolist (name (list "cc" "consult" "corfu" "flycheck" "go"
-					"interactive" "lisp" "magit" "projectile" "python"
-					"rune" "rust" "treemacs" "visual" "web"))
-  (load (expand-file-name (format "modules/%s" name) user-emacs-directory)))
+(dolist (name (list "cc" "consult" "corfu" "flycheck"
+			   "go" "interactive" "lisp" "magit" "projectile"
+			   "python" "rune" "rust" "treemacs" "visual" "web"))
+  (load (expand-file-name (format "modules/%s.el" name) user-emacs-directory) nil 'nomessage))
 
 (when (memq window-system '(w32))
-  (expand-file-name "modules/windows" user-emacs-directory))
+  (load (expand-file-name "modules/windows.el" user-emacs-directory)  nil 'nomessage))
 
 (use-package exec-path-from-shell
   :when (memq window-system '(mac ns x))
