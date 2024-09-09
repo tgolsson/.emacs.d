@@ -93,3 +93,5 @@
         ("STUB"   . "#1E90FF")
 		("BUG"   . "red")))
   (global-hl-todo-mode))
+
+;FIXME
