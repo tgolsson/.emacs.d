@@ -34,4 +34,6 @@
 
 (use-package magit-todos
   :after magit
+  :custom
+  (magit-todos-keyword-suffix (rx (optional (or "(" "[") (1+ (not (any ")" "]"))) (or ")" "]")) ":"))
   :config (magit-todos-mode 1))
