@@ -1,6 +1,6 @@
 (use-package cc-mode
   :defer t
-  :mode (("\\.h\\'" . c++-mode)
+  :mode (("\\.h\\'" . c-mode)
          ("\\.hpp\\'" . c++-mode)
          ("\\.cpp\\'" . c++-mode)
          ("\\.cxx\\'" . c++-mode)
@@ -18,15 +18,6 @@
 
   (electric-pair-mode 1)
   (add-hook 'before-save-hook 'clang-format-buffer t t))
-
-;;
-;; irony-mode
-;;
-(use-package irony
-  :commands irony-mode
-  :defer t
-  :config
-  (irony-cdb-autosetup-compile-options))
 
 ;; Redefinition of function from gud.el
 (defun gud-find-expr (&rest args)

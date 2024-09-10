@@ -19,7 +19,6 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
@@ -61,7 +60,7 @@
   :init
   (global-so-long-mode 1)
   (push '(fullscreen . maximized) default-frame-alist)
-  (when window-system (set-frame-font "Cascadia Code 13"))
+  (when window-system (set-frame-font "Cascadia Code 16"))
   (set-fringe-mode 20)
   (setq-default custom-safe-themes t
                 transient-mark-mode t
@@ -125,22 +124,9 @@
 (use-package no-littering)
 
 
-(dolist (name (list
-			   "cc"
-			   "consult"
-			   "corfu"
-			   "flycheck"
-			   "go"
-			   "interactive"
-			   "lisp"
-			   "magit"
-			   "projectile"
-			   "python"
-			   "rune"
-			   "rust"
-			   "treemacs"
-			   "visual"
-			   "web"))
+(dolist (name (list "cc" "consult" "corfu" "flycheck" "go"
+					"interactive" "lisp" "magit" "projectile" "python"
+					"rune" "rust" "treemacs" "visual" "web"))
   (load (expand-file-name (format "modules/%s" name) user-emacs-directory)))
 
 (when (memq window-system '(w32))
@@ -158,7 +144,6 @@
   (savehist-autosave-interval 60))
 
 (use-package recentf
-  :bind (("<f6>" . counsel-recentf))
   :custom
   (recentf-max-saved-items 2000)
   :init
@@ -188,7 +173,7 @@
 
 (use-package eglot
   :ensure t
-  :hook ((( rust-mode go-mode python-mode web-mode) . eglot-ensure))
+  :hook ((( rust-mode go-mode python-mode web-mode c-mode) . eglot-ensure))
   :bind-keymap ("C-c l" . eglot-mode-map)
   :bind (:map eglot-mode-map
 			  ("C-c l a" . eglot-code-actions)
@@ -209,6 +194,20 @@
   (eglot-events-buffer-size 0)
   (eglot-extend-to-xref t)
   :init
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '((c-mode c++-mode)
+                   . ("clangd"
+                      "-j=4"
+                      "--log=error"
+                      "--malloc-trim"
+                      "--background-index"
+                      "--clang-tidy"
+                      "--cross-file-rename"
+                      "--completion-style=detailed"
+                      "--pch-storage=memory"
+                      "--header-insertion=never"
+                      "--header-insertion-decorators=0"))))
   (setq-default eglot-workspace-configuration
 				'(:pylsp (
 						  :plugins (
