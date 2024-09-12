@@ -294,6 +294,66 @@
   :init (which-key-mode 1)
   :config (setq which-key-idle-delay 0.3))
 
+
+(use-package vterm :defer t)
+(use-package vterm-toggle
+  :defer t
+  :bind
+  ("C-'" . vterm-toggle)
+  :custom
+  (vterm-toggle-scope 'project)
+  (vterm-toggle-fullscreen-p nil)
+  (vterm-toggle-cd-auto-create-buffer nil)
+  :config
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                   (let ((buffer (get-buffer buffer-or-name)))
+                     (with-current-buffer buffer
+                       (or (equal major-mode 'vterm-mode)
+                           (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                 (display-buffer-reuse-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (dedicated . t) ;dedicated is supported in emacs27
+                 (reusable-frames . visible)
+                 (window-height . 0.3))))
+
+(use-package dired+)
+
+(use-package compile-multi
+  :commands compile-multi
+  :bind
+  (("<f9>" .   'mxl/compile-multi-recompile)
+   ("<f10>" .   'ts/compile-multi-current-dir)
+   ("C-<f9>" . 'compile-multi))
+  :init
+  (setq compile-multi-config nil)
+  (setq compile-multi-default-directory #'projectile-project-root)
+
+  (defun mxl/compile-multi-recompile ()
+    (interactive)
+    (if (and compile-command
+             (equal compilation-directory
+                    (funcall compile-multi-default-directory)))
+        (recompile)
+      (compile-multi)))
+
+  (defun ts/compile-multi-current-dir()
+    (interactive)
+	(let ((compile-multi-default-directory (lambda () default-directory)))
+	  (compile-multi)))
+
+  :config
+  (push `(t
+          ("Fallback:Edit command" . ,#'(lambda ()
+                                          (call-interactively 'compile))))
+        compile-multi-config)
+  (push '((file-exists-p "Makefile")
+        ("make:build" . "make build")
+        ("make:test" . "make test")
+        ("make:all" . "make all"))
+      compile-multi-config))
+
+
 (bind-key "M-Q" 'delete-trailing-whitespace)
 (global-set-key (kbd "C-x C-b")              'ibuffer)
 (global-set-key (kbd "M-z")                  'zap-up-to-char)
@@ -326,26 +386,19 @@
 (global-set-key (kbd "<C-wheel-up>") 'acg/zoom-frame)
 (global-set-key (kbd "<C-wheel-down>") 'acg/zoom-frame-out)
 (define-key global-map (kbd "M-o") 'wsl-copy-region-to-clipboard)
-
-
-(use-package vterm :defer t)
-(use-package vterm-toggle
-  :defer t
-  :bind
-  ("C-'" . vterm-toggle)
-  :custom
-  (vterm-toggle-scope 'project)
-  (vterm-toggle-fullscreen-p nil)
-  (vterm-toggle-cd-auto-create-buffer nil)
-  :config
-  (add-to-list 'display-buffer-alist
-               '((lambda (buffer-or-name _)
-                   (let ((buffer (get-buffer buffer-or-name)))
-                     (with-current-buffer buffer
-                       (or (equal major-mode 'vterm-mode)
-                           (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-                 (display-buffer-reuse-window display-buffer-in-side-window)
-                 (side . bottom)
-                 (dedicated . t) ;dedicated is supported in emacs27
-                 (reusable-frames . visible)
-                 (window-height . 0.3))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((compile-command format "meson compile -C %sbuild"
+					  (projectile-project-root))
+	 (compile-command format "meson compile -C %s/build"
+					  (projectile-project-root)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
