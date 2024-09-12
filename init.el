@@ -5,6 +5,7 @@
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq comp-async-report-warnings-errors nil)
 
+
 ;;; Init bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -21,6 +22,10 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+
+(when (memq window-system '(w32))
+  (setq native-comp-speed -1
+		no-native-compile t))
 
 ;;; In order to still use `package-list-packages' to find new toys.
 (require 'use-package)
@@ -78,7 +83,9 @@
   :init
   (global-so-long-mode 1)
   (push '(fullscreen . maximized) default-frame-alist)
-  (when window-system (set-frame-font "Iosevka Term Medium Extended 18"))
+  (when window-system (set-frame-font (cond
+                                       ((string-equal (window-system) "w32") "Iosevka Term Medium 13")
+                                       (t "Iosevka Term Medium Extended 18"))))
   (set-fringe-mode 20)
   (setq-default custom-safe-themes t
                 transient-mark-mode t
@@ -319,40 +326,23 @@
 
 (use-package dired+)
 
-(use-package compile-multi
-  :commands compile-multi
-  :bind
-  (("<f9>" .   'mxl/compile-multi-recompile)
-   ("<f10>" .   'ts/compile-multi-current-dir)
-   ("C-<f9>" . 'compile-multi))
-  :init
-  (setq compile-multi-config nil)
-  (setq compile-multi-default-directory #'projectile-project-root)
+  ;; :config
+  ;; (push `(t
+  ;;         ("Fallback:Edit command" . ,#'(lambda ()
+  ;;                                         (call-interactively 'compile))))
+  ;;       compile-multi-config)
+  ;; (push '((file-exists-p "Makefile")
+  ;;       ("make:build" . "make build")
+  ;;       ("make:test" . "make test")
+  ;;       ("make:all" . "make all"))
+  ;;     compile-multi-config)
 
-  (defun mxl/compile-multi-recompile ()
-    (interactive)
-    (if (and compile-command
-             (equal compilation-directory
-                    (funcall compile-multi-default-directory)))
-        (recompile)
-      (compile-multi)))
 
-  (defun ts/compile-multi-current-dir()
-    (interactive)
-	(let ((compile-multi-default-directory (lambda () default-directory)))
-	  (compile-multi)))
-
-  :config
-  (push `(t
-          ("Fallback:Edit command" . ,#'(lambda ()
-                                          (call-interactively 'compile))))
-        compile-multi-config)
-  (push '((file-exists-p "Makefile")
-        ("make:build" . "make build")
-        ("make:test" . "make test")
-        ("make:all" . "make all"))
-      compile-multi-config))
-
+(use-package compile-multi-all-the-icons
+  :ensure t
+  :after all-the-icons-completion
+  :after compile-multi
+  :demand t)
 
 (bind-key "M-Q" 'delete-trailing-whitespace)
 (global-set-key (kbd "C-x C-b")              'ibuffer)
@@ -386,19 +376,3 @@
 (global-set-key (kbd "<C-wheel-up>") 'acg/zoom-frame)
 (global-set-key (kbd "<C-wheel-down>") 'acg/zoom-frame-out)
 (define-key global-map (kbd "M-o") 'wsl-copy-region-to-clipboard)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values
-   '((compile-command format "meson compile -C %sbuild"
-					  (projectile-project-root))
-	 (compile-command format "meson compile -C %s/build"
-					  (projectile-project-root)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

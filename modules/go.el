@@ -5,7 +5,7 @@
   :mode "\\.go\\'"
   :init
   (use-package flycheck-golangci-lint :commands flycheck-golangci-lint-setup)
-  (use-package go-projectile :commands go-projectile-tools-add-path :hook (go-mode . go-projectile-set-gopath))
+  ;; (use-package go-projectile :commands go-projectile-tools-add-path :hook (go-mode . go-projectile-set-gopath))
   :config
   (defun to/my-go-mode ()
     ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)

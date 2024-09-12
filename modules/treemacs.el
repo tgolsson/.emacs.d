@@ -77,8 +77,8 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-(use-package treemacs-projectile
-  :after (treemacs projectile))
+;; (use-package treemacs-projectile
+;;   :after (treemacs projectile))
 
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once))

@@ -10,8 +10,9 @@
 
 ;;; VERTICO TEST
 (defun dw/get-project-root ()
-  (when (fboundp 'projectile-project-root)
-    (projectile-project-root)))
+  (if (fboundp 'projectile-project-root)
+      (projectile-project-root)
+	(project-root (project-current))))
 
 (defvar consult--fd-command nil)
 (defun consult--fd-builder (input)
