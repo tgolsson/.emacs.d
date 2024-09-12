@@ -41,6 +41,24 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
+(setq doom-gc-cons-threshold (* 16 1024 1024)) ;; 16 MB
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold doom-gc-cons-threshold
+                  gc-cons-percentage 0.1)))
+
+(defun doom-defer-garbage-collection-h ()
+  "Don't do garbage collection during startup."
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun doom-restore-garbage-collection-h ()
+  "Defer it so that commands launched immediately after will enjoy the benefits."
+  (run-at-time
+   1 nil (lambda () (setq gc-cons-threshold doom-gc-cons-threshold))))
+
+(add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
+(add-hook 'minibuffer-exit-hook #'doom-restore-garbage-collection-h)
+
 (defmacro to/disable (name) `(when (fboundp ',name) (,name -1)))
 (defun risky-local-variable-p (sym &optional _ignored) "Noop" nil)
 
@@ -60,12 +78,14 @@
   :init
   (global-so-long-mode 1)
   (push '(fullscreen . maximized) default-frame-alist)
-  (when window-system (set-frame-font "Cascadia Code 16"))
+  (when window-system (set-frame-font "Iosevka Term Medium Extended 18"))
   (set-fringe-mode 20)
   (setq-default custom-safe-themes t
                 transient-mark-mode t
 				tab-width 4)
-  (setq completion-cycle-threshold 3
+  (setq backup-by-copying t
+		completion-cycle-threshold 3
+		completions-detailed t
 		read-extended-command-predicate #'command-completion-default-include-p
 		tab-always-indent 'complete
 		read-process-output-max (* 1024 1024)
@@ -106,12 +126,14 @@
 		x-select-enable-primary t)
 
 
+
   (fset 'yes-or-no-p 'y-or-n-p)
   (mapc 'frame-set-background-mode (frame-list))
 
   (transient-mark-mode 1)
   (make-variable-buffer-local 'transient-mark-mode)
   (put 'transient-mark-mode 'permanent-local t)
+  (electric-indent-mode nil)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
@@ -304,3 +326,26 @@
 (global-set-key (kbd "<C-wheel-up>") 'acg/zoom-frame)
 (global-set-key (kbd "<C-wheel-down>") 'acg/zoom-frame-out)
 (define-key global-map (kbd "M-o") 'wsl-copy-region-to-clipboard)
+
+
+(use-package vterm :defer t)
+(use-package vterm-toggle
+  :defer t
+  :bind
+  ("C-'" . vterm-toggle)
+  :custom
+  (vterm-toggle-scope 'project)
+  (vterm-toggle-fullscreen-p nil)
+  (vterm-toggle-cd-auto-create-buffer nil)
+  :config
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                   (let ((buffer (get-buffer buffer-or-name)))
+                     (with-current-buffer buffer
+                       (or (equal major-mode 'vterm-mode)
+                           (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                 (display-buffer-reuse-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (dedicated . t) ;dedicated is supported in emacs27
+                 (reusable-frames . visible)
+                 (window-height . 0.3))))

@@ -40,9 +40,11 @@
 (setq debug-on-error enable-debug-p
       jka-compr-verbose enable-debug-p)
 
-(setq native-comp-speed -1
-	  no-native-compile t
-	  native-comp-async-report-warnings-errors 'silent
+(when (memq window-system '(w32))
+  (setq native-comp-speed -1
+		no-native-compile t))
+
+(setq native-comp-async-report-warnings-errors 'silent
 	  native-comp-warning-on-missing-source enable-debug-p
 	  byte-compile-warnings enable-debug-p
 	  byte-compile-verbose enable-debug-p)
