@@ -8,11 +8,13 @@
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t
 		doom-themes-padded-modeline t)
-  (load-theme 'doom-1337 t)
+  (load-theme 'doom-one-light t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config))
+
+(set-face-attribute 'vertico-current nil :background "#dfdfdf")
 
 (use-package doom-modeline
   :custom
