@@ -20,19 +20,17 @@ the checking happens for all pairs in auto-minor-mode-alist"
         (setq alist (cdr alist))))))
 
 (add-hook 'find-file-hook #'enable-minor-mode-based-on-extension)
-(add-to-list 'auto-minor-mode-alist '("\\.svelte\\'" . eglot-mode))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
   :custom (lsp-clients-typescript-prefer-use-project-ts-server t)
   :hook ((typescript-mode . hs-minor-mode)
 		 (typescript-mode . (lambda ()
-							  (eglot-ensure)
 							  (prettier-js-mode 1)))))
 
 (use-package web-mode
-  :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
-  :hook (web-mode . eglot-ensure)
+  :mode ("\\.phtml\\'" "\\.html\\'")
+  :config
   :init
   (use-package prettier-js
     :init
@@ -46,3 +44,11 @@ the checking happens for all pairs in auto-minor-mode-alist"
         web-mode-css-indent-offset 4
         web-mode-markup-indent-offset 4
         web-mode-script-padding 4))
+
+(use-package svelte-mode
+  :custom
+  (svelte-basic-offset 4))
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+			   '(svelte-mode . ("svelteserver" "--stdio"))))

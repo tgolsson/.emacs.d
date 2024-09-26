@@ -146,7 +146,7 @@
 
 (use-package no-littering)
 
-(dolist (name (list "cc" "consult" "corfu" "flycheck"
+(dolist (name (list "env" "cc" "consult" "corfu" "flycheck"
 			   "go" "interactive" "lisp" "magit" "projectile"
 			   "python" "rune" "rust" "treemacs" "visual" "web"))
   (load (expand-file-name (format "modules/%s.el" name) user-emacs-directory) nil 'nomessage))
@@ -195,7 +195,7 @@
 
 (use-package eglot
   :ensure t
-  :hook ((( rust-mode go-mode python-mode web-mode c-mode) . eglot-ensure))
+  :hook (((rust-mode go-mode python-mode web-mode c-mode web-mode) . eglot-ensure))
   :bind-keymap ("C-c l" . eglot-mode-map)
   :bind (:map eglot-mode-map
 			  ("C-c l a" . eglot-code-actions)

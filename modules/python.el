@@ -31,3 +31,10 @@
   (modify-syntax-entry ?_  "_")
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
+
+(defun @-default-directory-project-root (orig-fun &rest args)
+  "Overrides the default-directory with the project root if possible."
+  (let ((default-directory (or (and (project-current) (project-root (project-current))) default-directory)))
+	(apply orig-fun args)))
+
+(advice-add 'run-python :around #'@-default-directory-project-root)
