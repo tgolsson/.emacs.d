@@ -137,7 +137,7 @@
   (fset 'yes-or-no-p 'y-or-n-p)
   (mapc 'frame-set-background-mode (frame-list))
 
-  (transient-mark-mode 1)
+  (transient-mark-mode t)
   (make-variable-buffer-local 'transient-mark-mode)
   (put 'transient-mark-mode 'permanent-local t)
   (electric-indent-mode nil)
@@ -147,7 +147,7 @@
 (use-package no-littering)
 
 (dolist (name (list "env" "cc" "consult" "corfu" "flycheck"
-			   "go" "interactive" "lisp" "magit" "projectile"
+			   "go" "interactive" "lisp" "magit" "odin" "projectile"
 			   "python" "rune" "rust" "treemacs" "visual" "web"))
   (load (expand-file-name (format "modules/%s.el" name) user-emacs-directory) nil 'nomessage))
 
