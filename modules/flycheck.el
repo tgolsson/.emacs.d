@@ -16,7 +16,7 @@ up before you execute another command."
   (flycheck-buffer-automatically 'idle-change))
 
 (use-package flycheck
-  :hook ((cc-mode python-mode rust-mode go-mode protobuf-mode) . flycheck-mode)
+  :hook ((cc-mode rust-mode go-mode protobuf-mode) . flycheck-mode)
   :diminish t
   :commands flycheck-mode
   :custom
@@ -46,7 +46,9 @@ up before you execute another command."
     ((error line-start (file-name) ":" line ":" column ":" (message) line-end))
   :modes (text-mode prog-mode markdown-mode rust-mode toml-mode python-mode))
 
-(add-to-list 'flycheck-checkers 'typos)
+(add-to-list 'flycheck-checkers 'typos t)
+(flycheck-add-next-checker 'python-ruff 'typos)
+(flycheck-add-next-checker 'python-ruff 'python-pyright)
 
 (flycheck-def-config-file-var buf-buf-yaml buf '("buf.yaml"))
 
@@ -57,4 +59,14 @@ up before you execute another command."
   :modes (protobuf-mode)
   :working-directory (lambda (checker) (locate-dominating-file buffer-file-name "buf.yaml")))
 
-(add-to-list 'flycheck-checkers 'buf)
+(add-to-list 'flycheck-checkers 'buf t)
+
+(defun @-flycheck-python-find-project-root (_checker)
+  (let ((start (if buffer-file-name
+                   (file-name-directory buffer-file-name)
+                 default-directory)))
+
+    (or (locate-dominating-file start "pants.toml")
+		(flycheck-python-find-project-root _checker))))
+
+(setf (flycheck-checker-get 'python-pyright 'working-directory) #'@-flycheck-python-find-project-root)

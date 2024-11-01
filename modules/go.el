@@ -11,9 +11,11 @@
     ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
     ;; (add-hook 'before-save-hook 'gofmt-before-save)
     ;; (go-eldoc-setup)
-    (go-projectile-tools-add-path)
-    (flycheck-golangci-lint-setup)
-    (flycheck-pos-tip-mode 1)
+    ;; (go-projectile-tools-add-path)
+
+	;; actually useless on larger repos. Takes over half a minute just to load files, and then >2 minutes to
+    ;; (flycheck-golangci-lint-setup)
+    ;; (flycheck-pos-tip-mode 1)
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
   (add-hook 'go-mode-hook 'to/my-go-mode))
 

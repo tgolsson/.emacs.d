@@ -171,9 +171,22 @@ folder, otherwise delete a word"
   :custom
   (vertico-cycle t)
   :custom-face
-  (vertico-current ((t (:background "#3a3f5a"))))
+;  (vertico-current ((t (:background "#3a3f5a"))))
   :init
   (vertico-mode))
+
+;; (use-package vertico-buffer
+;;   :straight '(vertico-buffer
+;; 			  :host github
+;;               :repo "minad/vertico"
+;;               :branch "main"
+;; 			  :files ("extensions/vertico-buffer.el"))
+;;   :custom
+;;   (vertico-buffer-display-action '(display-buffer-in-side-window
+;;                   (side . right)
+;;                   (window-width . 0.3)))
+;;   :init
+;;   (vertico-buffer-mode))
 
 (use-package consult-eglot
   :bind (:map eglot-mode-map

@@ -84,16 +84,30 @@
 
 (use-package hl-todo
   :bind (("C-c n" . #'hl-todo-next)
-		 ("C-c o" . #'hl-todo-rgrep)
-		 ("C-c i"  . #'hl-todo-insert))
+         ("C-c o" . #'hl-todo-rgrep)
+         ("C-c i"  . #'hl-todo-insert))
   :init
   (setq hl-todo-keyword-faces
-      '(("TODO"   . "green")
-        ("FIXME"  . "turquoise")
-        ("DEBUG"  . "#A020F0")
-        ("GOTCHA" . "#FF4500")
-        ("STUB"   . "#1E90FF")
-		("BUG"   . "red")))
+        '(
+          ("BUG"   . "red")
+          ("DEBUG"  . "#A020F0")
+          ("DONE" . "#afd8af")
+          ("DONT" . "#5f7f5f")
+          ("FAIL" . "#8c5353")
+          ("FIXME"  . "turquoise")
+          ("GOTCHA" . "#FF4500")
+          ("HACK" . "#d0bf8f")
+          ("HOLD" . "#d0bf8f")
+          ("KLUDGE" . "#d0bf8f")
+          ("MAYBE" . "#d0bf8f")
+          ("NEXT" . "#dca3a3")
+          ("NOSUBMIT"   . "red")
+          ("NOTE" . "#d0bf8f")
+          ("OKAY" . "#7cb8bb")
+          ("PROG" . "#7cb8bb")
+          ("STUB"   . "#1E90FF")
+          ("TEMP" . "#d0bf8f")
+          ("THEM" . "#dc8cc3")
+          ("TODO"   . "green")
+          ("XXXX*" . "#cc9393")))
   (global-hl-todo-mode))
-
-;FIXME

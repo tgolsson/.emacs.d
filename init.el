@@ -217,6 +217,8 @@
   (eglot-extend-to-xref t)
   :init
   (with-eval-after-load 'eglot
+	(add-hook 'eglot-managed-mode-hook (lambda ()
+										 (add-hook 'before-save-hook #'eglot-format-buffer t t)))
     (add-to-list 'eglot-server-programs
                  '((c-mode c++-mode)
                    . ("clangd"
@@ -253,7 +255,10 @@
 (use-package toml-mode)
 (use-package graphviz-dot-mode)
 (use-package yaml-mode :mode ("\\.yaml$" "\\.yml$") :custom (yaml-indent-offset 2))
-(use-package dumb-jump)
+(use-package dumb-jump
+  :defer t
+  :init
+  (dumb-jump-mode))
 
 (use-package jsonnet-mode
   :config
@@ -326,24 +331,6 @@
 
 (use-package dired+)
 
-  ;; :config
-  ;; (push `(t
-  ;;         ("Fallback:Edit command" . ,#'(lambda ()
-  ;;                                         (call-interactively 'compile))))
-  ;;       compile-multi-config)
-  ;; (push '((file-exists-p "Makefile")
-  ;;       ("make:build" . "make build")
-  ;;       ("make:test" . "make test")
-  ;;       ("make:all" . "make all"))
-  ;;     compile-multi-config)
-
-
-(use-package compile-multi-all-the-icons
-  :ensure t
-  :after all-the-icons-completion
-  :after compile-multi
-  :demand t)
-
 (bind-key "M-Q" 'delete-trailing-whitespace)
 (global-set-key (kbd "C-x C-b")              'ibuffer)
 (global-set-key (kbd "M-z")                  'zap-up-to-char)
@@ -376,3 +363,6 @@
 (global-set-key (kbd "<C-wheel-up>") 'acg/zoom-frame)
 (global-set-key (kbd "<C-wheel-down>") 'acg/zoom-frame-out)
 (define-key global-map (kbd "M-o") 'wsl-copy-region-to-clipboard)
+
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))

@@ -16,10 +16,15 @@
     :config
     (pyvenv-mode 1))
 
-  (use-package python-black
+  ;; (use-package python-black
+  ;;   :demand t
+  ;;   :after python
+  ;;   :hook (python-mode . python-black-on-save-mode))
+
+  (use-package ruff-format
     :demand t
     :after python
-    :hook (python-mode . python-black-on-save-mode))
+    :hook (python-mode . ruff-format-on-save-mode))
 
   (use-package python-isort
     :demand t

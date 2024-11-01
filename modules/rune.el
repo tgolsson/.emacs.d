@@ -90,7 +90,7 @@
   (add-to-list 'eglot-server-programs
                '(rune-mode . ("cargo" "run" "--" "lsp"))))
 
-(use-package flymake-diagnostic-at-point)
+;; (use-package flymake-diagnostic-at-point)
 
 
 (add-to-list
