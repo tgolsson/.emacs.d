@@ -366,3 +366,7 @@
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
+(defun comint-clear-buffer ()
+  (interactive)
+  (let ((comint-buffer-maximum-size 0))
+    (comint-truncate-buffer)))
