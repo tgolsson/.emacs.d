@@ -232,18 +232,19 @@
                       "--pch-storage=memory"
                       "--header-insertion=never"
                       "--header-insertion-decorators=0"))))
-  (setq-default eglot-workspace-configuration
-				'(:pylsp (
-						  :plugins (
+  (setq eglot-workspace-configuration
+				'(
+				  :typescript-language-server (:typescript (:tsserver (:log "verbose")))
+				  :pylsp (:plugins (
 									:mccabe (:enabled nil)
 									:pycodestyle (:enabled nil)
 									:floe (:enabled t)))
-						 :gopls (
-								 :build.directoryFilters ["-bazel-bin" "-bazel-out" "-bazel-testlogs" "-bazel-mercari-feature-flags"]
-								 :formatting.gofumpt t
-								 :completion.usePlaceholders t
-								 :diagnostic.vulncheck "Imports"
-								 :diagnostic.staticcheck t))))
+				  :gopls (
+						  :build.directoryFilters ["-bazel-bin" "-bazel-out" "-bazel-testlogs" "-bazel-mercari-feature-flags"]
+						  :formatting.gofumpt t
+						  :completion.usePlaceholders t
+						  :diagnostic.vulncheck "Imports"
+						  :diagnostic.staticcheck t))))
 
 (use-package wgrep :demand t)
 (use-package editorconfig)

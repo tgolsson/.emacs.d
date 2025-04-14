@@ -25,16 +25,20 @@ the checking happens for all pairs in auto-minor-mode-alist"
   :mode "\\.ts\\'"
   :custom (lsp-clients-typescript-prefer-use-project-ts-server t)
   :hook ((typescript-mode . hs-minor-mode)
-		 (typescript-mode . (lambda ()
-							  (prettier-js-mode 1)))))
+		 (typescript-mode . eglot-ensure)))
+
+(define-derived-mode tsx-mode typescript-mode
+  "TypeScript[TSX]")
+(put 'tsx-mode 'eglot-language-id "typescriptreact")
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
+(add-to-list 'eglot-server-programs
+             '(tsx-mode . ("typescript-language-server" "--stdio")))
 
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'")
   :config
   :init
-  (use-package prettier-js
-    :init
-    (setq prettier-js-args '("--tab-width" "4" "--use-tabs" "true")))
 
   (use-package add-node-modules-path
     :hook web-mode)
@@ -44,11 +48,3 @@ the checking happens for all pairs in auto-minor-mode-alist"
         web-mode-css-indent-offset 4
         web-mode-markup-indent-offset 4
         web-mode-script-padding 4))
-
-(use-package svelte-mode
-  :custom
-  (svelte-basic-offset 4))
-
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-			   '(svelte-mode . ("svelteserver" "--stdio"))))

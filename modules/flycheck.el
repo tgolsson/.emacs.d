@@ -70,3 +70,7 @@ up before you execute another command."
 		(flycheck-python-find-project-root _checker))))
 
 (setf (flycheck-checker-get 'python-pyright 'working-directory) #'@-flycheck-python-find-project-root)
+
+(use-package flymake-biome
+  :straight (:host github :repo "erickgnavar/flymake-biome")
+  :hook ((web-mode . flymake-biome-load)))
