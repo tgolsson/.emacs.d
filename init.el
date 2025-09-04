@@ -5,7 +5,6 @@
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq comp-async-report-warnings-errors nil)
 
-
 ;;; Init bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -144,12 +143,17 @@
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
+(use-package project)
+
 (use-package no-littering)
 
 (dolist (name (list "env" "cc" "clj" "consult" "corfu" "flycheck"
 			   "go" "interactive" "lisp" "magit" "odin" "projectile"
 			   "python" "rune" "rust" "treemacs" "visual" "web"))
   (load (expand-file-name (format "modules/%s.el" name) user-emacs-directory) nil 'nomessage))
+
+(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-exists-p local-file) (load local-file nil 'nomessage)))
 
 (when (memq window-system '(w32))
   (load (expand-file-name "modules/windows.el" user-emacs-directory)  nil 'nomessage))

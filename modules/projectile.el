@@ -138,3 +138,5 @@
   :config (projection-multi-embark-setup-command-map))
 
 (use-package projection-dape)
+(use-package ansi-color
+    :hook (compilation-filter . ansi-color-compilation-filter))
